@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_locales/flutter_locales.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:my_zakat/business_logic/knowledge_base.dart';
 
 import '../home/home_screen.dart';
@@ -31,8 +32,90 @@ class SecondScreen extends StatelessWidget {
   final TextEditingController inventoryController = TextEditingController();
   final TextEditingController debtsController = TextEditingController();
   final TextEditingController cashController = TextEditingController();
+  void _loadAndShowAd(BuildContext context) async {
+    InterstitialAd? _interstitialAd;
+    final AdRequest request = AdRequest();
+    await InterstitialAd.load(
+      adUnitId: 'ca-app-pub-3940256099942544/1033173712', // Replace with your actual ad unit ID
+      request: request,
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialAd?.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (InterstitialAd ad) {
+              ad.dispose();
+              // Navigate or perform actions after the ad is dismissed
+              _navigateAfterAd(context);
+            },
+            onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+              print('Ad failed to show: $error');
+              ad.dispose();
+              // Optionally, navigate or perform actions even if the ad fails to show
+              _navigateAfterAd(context);
+            },
+          );
+          _interstitialAd?.show();
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          print('Ad failed to load: $error');
+          // Optionally, navigate or perform actions even if the ad fails to load
+          _navigateAfterAd(context);
+        },
+      ),
+    );
+  }
 
+  void _navigateAfterAd(BuildContext context) async {
+    double apart = double.tryParse(apartmentsController.text) ?? 0.0;
+    double invent = double.tryParse(inventoryController.text) ?? 0.0;
+    double invest = double.tryParse(investmentController.text) ?? 0.0;
+    double deb = double.tryParse(debtsController.text) ?? 0.0;
+    double cash = double.tryParse(cashController.text) ?? 0.0;
 
+    double zakatAmount = await calculateZakat(
+        gold24Weight: gold24Weight,
+        gold22Weight: gold22Weight,
+        gold21Weight: gold21Weight,
+        gold18Weight: gold18Weight,
+        silverWeight: silverWeight,
+        cash: cash,
+        gold24Price: gold24Price,
+        silverPrice: silverPrice,
+        currency: currency,
+        apartments: apart,
+        inventory: invent,
+        investments: invest,
+        debts: deb,
+        context: context
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(Locales.string(context, 'zakat_amount')),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('${Locales.string(context, 'your_zakat_amount_is')} ${zakatAmount.toStringAsFixed(2)} $currency'),
+            SizedBox(height: 8.0),
+            Text(Locales.string(context, 'this_amount')),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );
+            },
+            child: Text(Locales.string(context, 'ok')),
+          ),
+        ],
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -210,70 +293,14 @@ class SecondScreen extends StatelessWidget {
             ),
             SizedBox(height: 16.0),
             Center(
-            child: ElevatedButton(
-              onPressed: () async {
-                // Add logic to calculate Zakat based on user inputs
-                double apart = double.tryParse(apartmentsController.text) ??
-                    0.0;
-                double invent = double.tryParse(inventoryController.text) ??
-                    0.0;
-                double invest = double.tryParse(investmentController.text) ??
-                    0.0;
-                double deb = double.tryParse(debtsController.text) ?? 0.0;
-                double cash = double.tryParse(cashController.text) ?? 0.0;
-
-                double zakatAmount = await calculateZakat(
-                    gold24Weight: gold24Weight,
-                    gold22Weight: gold22Weight,
-                    gold21Weight: gold21Weight,
-                    gold18Weight: gold18Weight,
-                    silverWeight: silverWeight,
-                    cash: cash,
-                    gold24Price: gold24Price,
-                    silverPrice: silverPrice,
-                    currency: currency,
-                    apartments: apart,
-                    inventory: invent,
-                    investments: invest,
-                    debts: deb,
-                    context: context
-                );
-
-                showDialog(
-                  context: context,
-                  builder: (context) =>
-                      AlertDialog(
-                        title: Text(Locales.string(context, 'zakat_amount')),
-                        content: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text('${Locales.string(context,
-                                'your_zakat_amount_is')} ${zakatAmount.toStringAsFixed(2)} $currency'),
-                            SizedBox(height: 8.0),
-                            Text(Locales.string(context, 'this_amount')),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => HomeScreen()),
-                              );
-                            },
-                            child: Text(Locales.string(context, 'ok')),
-                          ),
-                        ],
-                      ),
-                );
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // Set text color to white
+              child: ElevatedButton(
+                onPressed: () => _loadAndShowAd(context),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                ),
+                child: Text(Locales.string(context, 'calculate'), style: TextStyle(color: Colors.white)),
               ),
-              child: Text(Locales.string(context, 'calculate'), style: TextStyle(color: Colors.white),),
-            ),
             )
           ],
         ),
