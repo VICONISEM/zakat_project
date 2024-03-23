@@ -17,6 +17,57 @@ class _GoldSilverEntryScreenState extends State<GoldSilverEntryScreen> {
   String? gold24ErrorText;
   String? silverErrorText;
   String? currencyErrorText;
+  String selectedCountry = 'Egypt';
+  String selectedCurrency="EGP"; // Declare selectedCurrency variable
+  late List<String> uniqueCurrencies; // Declare uniqueCurrencies as a class field
+
+  Map<String, String> countryToCurrency = {
+    'United Arab Emirates': 'AED',
+    'Afghanistan': 'AFN',
+    'Argentina': 'ARS',
+    'Australia': 'AUD',
+    'Bahrain': 'BHD',
+    'Brazil': 'BRL',
+    'Canada': 'CAD',
+    'Switzerland': 'CHF',
+    'Chile': 'CLP',
+    'China': 'CNY',
+    'Colombia': 'COP',
+    'Egypt': 'EGP',
+    'Euro': 'EUR',
+    'United Kingdom': 'GBP',
+    'Indonesia': 'IDR',
+    'Israel': 'ILS',
+    'India': 'INR',
+    'Iran': 'IRR',
+    'Jordan': 'JOD',
+    'Japan': 'JPY',
+    'South Korea': 'KRW',
+    'Kuwait': 'KWD',
+    'Lebanon': 'LBP',
+    'Mexico': 'MXN',
+    'Malaysia': 'MYR',
+    'Nigeria': 'NGN',
+    'New Zealand': 'NZD',
+    'Oman': 'OMR',
+    'Peru': 'PEN',
+    'Philippines': 'PHP',
+    'Pakistan': 'PKR',
+    'Qatar': 'QAR',
+    'Russia': 'RUB',
+    'Saudi Arabia': 'SAR',
+    'Singapore': 'SGD',
+    'Syria': 'SYP',
+    'Thailand': 'THB',
+    'Turkey': 'TRY',
+    'Taiwan': 'TWD',
+    'United States': 'USD',
+    'Vietnam': 'VND',
+    'South Africa': 'ZAR',
+    'Zambia': 'ZMW',
+  };
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -120,10 +171,23 @@ class _GoldSilverEntryScreenState extends State<GoldSilverEntryScreen> {
                 SizedBox(height: 20.0),
 
                 Container(
-                  child: TextFormField(
-                    controller: currencyController,
+                  child: DropdownButtonFormField<String>(
+                    value: selectedCountry,
+                    items: countryToCurrency.keys.map((String country) {
+                      return DropdownMenuItem<String>(
+                        value: country,
+                        child: Text(country),
+                      );
+                    }).toList(),
+                    onChanged: (String? country) {
+                      setState(() {
+                        selectedCountry = country ?? '';
+                        selectedCurrency = countryToCurrency[selectedCountry] ?? '';
+                        currencyController.text=selectedCurrency;
+                      });
+                    },
                     decoration: InputDecoration(
-                      labelText: Locales.string(context, 'currency'),
+                      labelText: 'Country',
                       labelStyle: TextStyle(color: Colors.black),
                       errorText: currencyErrorText,
                       errorBorder: OutlineInputBorder(
@@ -143,16 +207,9 @@ class _GoldSilverEntryScreenState extends State<GoldSilverEntryScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    keyboardType: TextInputType.text,
-                    onChanged: (value) {
-                      setState(() {
-                        currencyErrorText = value.isEmpty
-                            ? Locales.string(context, 'please_enter_currency')
-                            : null;
-                      });
-                    },
                   ),
                 ),
+
 
                 SizedBox(height: 40.0),
 
