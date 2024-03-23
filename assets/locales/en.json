@@ -57,8 +57,11 @@
   "debts": "Debts",
   "calculate": "Calculate",
 
-  "zakat_amount": "Total zakat amount",
-  "your_zakat_amount_is": "Your zakat amount is ",
+  "zakat_amount": "zakat amount",
+  "your_zakat_amount_is": "Total zakat amount is ",
+  "gold_zakat_amount" : "Gold zakat amount is ",
+  "silver_zakat_amount": "Silver zakat amount is ",
+  "cash_zakat_amount": "Cash zakat amount is ",
   "this_amount": "This amount is calculated based on your inputs.",
   "ok": "ok",
 

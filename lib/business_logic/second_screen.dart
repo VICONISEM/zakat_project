@@ -72,7 +72,7 @@ class SecondScreen extends StatelessWidget {
     double deb = double.tryParse(debtsController.text) ?? 0.0;
     double cash = double.tryParse(cashController.text) ?? 0.0;
 
-    double zakatAmount = await calculateZakat(
+    final List<double> values = await calculateZakat(
         gold24Weight: gold24Weight,
         gold22Weight: gold22Weight,
         gold21Weight: gold21Weight,
@@ -97,7 +97,14 @@ class SecondScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('${Locales.string(context, 'your_zakat_amount_is')} ${zakatAmount.toStringAsFixed(2)} $currency'),
+            Text('${Locales.string(context, 'your_zakat_amount_is')} ${values[0].toStringAsFixed(2)} $currency',
+              style: TextStyle(fontWeight: FontWeight.bold),),
+            SizedBox(height: 8.0),
+            Text('${Locales.string(context, 'gold_zakat_amount')} ${values[1].toStringAsFixed(2)} $currency'),
+            SizedBox(height: 8.0),
+            Text('${Locales.string(context, 'silver_zakat_amount')} ${values[2].toStringAsFixed(2)} $currency'),
+            SizedBox(height: 8.0),
+            Text('${Locales.string(context, 'cash_zakat_amount')} ${values[3].toStringAsFixed(2)} $currency'),
             SizedBox(height: 8.0),
             Text(Locales.string(context, 'this_amount')),
           ],
@@ -126,185 +133,185 @@ class SecondScreen extends StatelessWidget {
         child : Container(
           height: MediaQuery.of(context).size.height, // Set height to screen height
 
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/background.png"),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: MediaQuery
-                .of(context)
-                .size
-                .height * 0.36),
-            Text(
-              Locales.string(context, 'enter_money_details'),
-              style: TextStyle(fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/background.png"),
+              fit: BoxFit.cover,
             ),
-            SizedBox(height: 8.0),
-            Row(
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: TextFormField(
-                    controller: cashController,
-                    decoration: InputDecoration(
-                      labelText: Locales.string(context, 'cash'),
-                      labelStyle: TextStyle(color: Colors.black),
-                      // Set label text color to white
-                      // errorText: gold24ErrorText,
-                      errorBorder: OutlineInputBorder( // Remove error border to eliminate the horizontal line
-                        borderSide: BorderSide(color: Colors.red),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      //prefixIcon: Icon(Icons.email, color: Colors.lightBlueAccent),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.indigo),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.indigo),
-                        borderRadius: BorderRadius.circular(20),
+                SizedBox(height: MediaQuery
+                    .of(context)
+                    .size
+                    .height * 0.36),
+                Text(
+                  Locales.string(context, 'enter_money_details'),
+                  style: TextStyle(fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+                SizedBox(height: 8.0),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: cashController,
+                        decoration: InputDecoration(
+                          labelText: Locales.string(context, 'cash'),
+                          labelStyle: TextStyle(color: Colors.black),
+                          // Set label text color to white
+                          // errorText: gold24ErrorText,
+                          errorBorder: OutlineInputBorder( // Remove error border to eliminate the horizontal line
+                            borderSide: BorderSide(color: Colors.red),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          //prefixIcon: Icon(Icons.email, color: Colors.lightBlueAccent),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.indigo),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.indigo),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        keyboardType: TextInputType.number,
+                        // Add logic to handle cash input
                       ),
                     ),
-                    keyboardType: TextInputType.number,
-                    // Add logic to handle cash input
-                  ),
+                    SizedBox(width: 16.0),
+                    Expanded(
+                      child: TextFormField(
+                        controller: apartmentsController,
+                        decoration: InputDecoration(
+                          labelText: Locales.string(context, 'apartments'),
+                          labelStyle: TextStyle(color: Colors.black),
+                          // Set label text color to white
+                          // errorText: gold24ErrorText,
+                          errorBorder: OutlineInputBorder( // Remove error border to eliminate the horizontal line
+                            borderSide: BorderSide(color: Colors.red),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          //prefixIcon: Icon(Icons.email, color: Colors.lightBlueAccent),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.indigo),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.indigo),
+                            borderRadius: BorderRadius.circular(20),
+                          ),),
+                        keyboardType: TextInputType.number,
+                        // Add logic to handle silver input
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 16.0),
-                Expanded(
-                  child: TextFormField(
-                    controller: apartmentsController,
-                    decoration: InputDecoration(
-                        labelText: Locales.string(context, 'apartments'),
-                      labelStyle: TextStyle(color: Colors.black),
-                      // Set label text color to white
-                      // errorText: gold24ErrorText,
-                      errorBorder: OutlineInputBorder( // Remove error border to eliminate the horizontal line
-                        borderSide: BorderSide(color: Colors.red),
-                        borderRadius: BorderRadius.circular(12.0),
+                SizedBox(height: 16.0),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: investmentController,
+                        decoration: InputDecoration(
+                          labelText: Locales.string(context, 'investment'),
+                          labelStyle: TextStyle(color: Colors.black),
+                          // Set label text color to white
+                          // errorText: gold24ErrorText,
+                          errorBorder: OutlineInputBorder( // Remove error border to eliminate the horizontal line
+                            borderSide: BorderSide(color: Colors.red),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          //prefixIcon: Icon(Icons.email, color: Colors.lightBlueAccent),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.indigo),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.indigo),
+                            borderRadius: BorderRadius.circular(20),
+                          ),),
+                        keyboardType: TextInputType.number,
+                        // Add logic to handle investment input
                       ),
-                      //prefixIcon: Icon(Icons.email, color: Colors.lightBlueAccent),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.indigo),
-                        borderRadius: BorderRadius.circular(20),
+                    ),
+                    SizedBox(width: 16.0),
+                    Expanded(
+                      child: TextFormField(
+                        controller: inventoryController,
+                        decoration: InputDecoration(
+                          labelText: Locales.string(context, 'inventory'),
+                          labelStyle: TextStyle(color: Colors.black),
+                          // Set label text color to white
+                          // errorText: gold24ErrorText,
+                          errorBorder: OutlineInputBorder( // Remove error border to eliminate the horizontal line
+                            borderSide: BorderSide(color: Colors.red),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          //prefixIcon: Icon(Icons.email, color: Colors.lightBlueAccent),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.indigo),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.indigo),
+                            borderRadius: BorderRadius.circular(20),
+                          ),),
+                        keyboardType: TextInputType.number,
+                        // Add logic to handle inventory input
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.indigo),
-                        borderRadius: BorderRadius.circular(20),
-                      ),),
-                    keyboardType: TextInputType.number,
-                    // Add logic to handle silver input
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    controller: investmentController,
-                    decoration: InputDecoration(
-                        labelText: Locales.string(context, 'investment'),
-                      labelStyle: TextStyle(color: Colors.black),
-                      // Set label text color to white
-                      // errorText: gold24ErrorText,
-                      errorBorder: OutlineInputBorder( // Remove error border to eliminate the horizontal line
-                        borderSide: BorderSide(color: Colors.red),
-                        borderRadius: BorderRadius.circular(12.0),
+                SizedBox(height: 16.0),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: debtsController,
+                        decoration: InputDecoration(
+                          labelText: Locales.string(context, 'Debts'),
+                          labelStyle: TextStyle(color: Colors.black),
+                          // Set label text color to white
+                          // errorText: gold24ErrorText,
+                          errorBorder: OutlineInputBorder( // Remove error border to eliminate the horizontal line
+                            borderSide: BorderSide(color: Colors.red),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          //prefixIcon: Icon(Icons.email, color: Colors.lightBlueAccent),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.indigo),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.indigo),
+                            borderRadius: BorderRadius.circular(20),
+                          ),),
+                        keyboardType: TextInputType.number,
+                        // Add logic to handle debts input
                       ),
-                      //prefixIcon: Icon(Icons.email, color: Colors.lightBlueAccent),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.indigo),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.indigo),
-                        borderRadius: BorderRadius.circular(20),
-                      ),),
-                    keyboardType: TextInputType.number,
-                    // Add logic to handle investment input
-                  ),
-                ),
-                SizedBox(width: 16.0),
-                Expanded(
-                  child: TextFormField(
-                    controller: inventoryController,
-                    decoration: InputDecoration(
-                        labelText: Locales.string(context, 'inventory'),
-                      labelStyle: TextStyle(color: Colors.black),
-                      // Set label text color to white
-                      // errorText: gold24ErrorText,
-                      errorBorder: OutlineInputBorder( // Remove error border to eliminate the horizontal line
-                        borderSide: BorderSide(color: Colors.red),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      //prefixIcon: Icon(Icons.email, color: Colors.lightBlueAccent),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.indigo),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.indigo),
-                        borderRadius: BorderRadius.circular(20),
-                      ),),
-                    keyboardType: TextInputType.number,
-                    // Add logic to handle inventory input
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    controller: debtsController,
-                    decoration: InputDecoration(
-                        labelText: Locales.string(context, 'Debts'),
-                      labelStyle: TextStyle(color: Colors.black),
-                      // Set label text color to white
-                      // errorText: gold24ErrorText,
-                      errorBorder: OutlineInputBorder( // Remove error border to eliminate the horizontal line
-                        borderSide: BorderSide(color: Colors.red),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      //prefixIcon: Icon(Icons.email, color: Colors.lightBlueAccent),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.indigo),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.indigo),
-                        borderRadius: BorderRadius.circular(20),
-                      ),),
-                    keyboardType: TextInputType.number,
-                    // Add logic to handle debts input
-                  ),
-                ),
+                    ),
 
+                  ],
+                ),
+                SizedBox(height: 16.0),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () => _loadAndShowAd(context),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                    ),
+                    child: Text(Locales.string(context, 'calculate'), style: TextStyle(color: Colors.white)),
+                  ),
+                )
               ],
             ),
-            SizedBox(height: 16.0),
-            Center(
-              child: ElevatedButton(
-                onPressed: () => _loadAndShowAd(context),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                ),
-                child: Text(Locales.string(context, 'calculate'), style: TextStyle(color: Colors.white)),
-              ),
-            )
-          ],
-        ),
-      ),
+          ),
         ),
       ),
     );

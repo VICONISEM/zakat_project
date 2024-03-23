@@ -59,6 +59,9 @@
 
   "zakat_amount": "مجموع الزكاة",
   "your_zakat_amount_is": "زكاتك : ",
+  "gold_zakat_amount" : "زكاتك عن الدهب ",
+  "silver_zakat_amount": "زكاتك عن الفضه",
+  "cash_zakat_amount": "زكاتك عن المال",
   "this_amount": "هذه النتيجة تمت حسابها بناءً على مدخلاتك",
   "ok": "حسنًا",
 
